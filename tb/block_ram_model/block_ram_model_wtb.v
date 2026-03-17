@@ -17,12 +17,13 @@ module block_ram_model_wtb;
     .ADDR_WIDTH(8),
     .DATA_WIDTH(32),
     .INIT_VALUE(0),
-    .RAM_WORDS(10)
+    .RAM_WORDS(10),
+    .READ_DELAY(1)
   ) dut (
     .clk(clk),
     .addr(addr),
     .wdata(wdata),
-    .wstrb(wstrb),
+    .wstrb(32'hFFFF_FFFF), // Enable all byte lanes for writing
     .en(en),
     .wr_en(wr_en),
     .rdata(rdata)

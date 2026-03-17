@@ -24,6 +24,7 @@ async def read_ram (dut, addr=random.randint(0,2^8), backdoor=False):
   dut.addr.value   = addr
   await ClockCycles(dut.clk, 1)
   dut.en.value     = 0
+  await ClockCycles(dut.clk, 1)
   await Timer(1, unit='step')
   read_data = int(dut.rdata.value)
   dut._log.info(f"Read 0x{read_data:X} from RAM address 0x{addr:X}.")
