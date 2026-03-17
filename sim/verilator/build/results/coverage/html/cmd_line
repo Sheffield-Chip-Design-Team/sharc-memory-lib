@@ -1,0 +1,1 @@
+genhtml sim/verilator/build/results/coverage/coverage.info --output-directory sim/verilator/build/results/coverage/html

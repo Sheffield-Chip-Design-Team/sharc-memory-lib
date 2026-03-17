@@ -1,0 +1,6 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1772303901" />
+    <testcase name="test_rw" classname="test_block_ram_model" file="/Users/macbook/chip_dev/ripple/ram/tb/block_ram_model/test_block_ram_model.py" lineno="44" time="0.05293107032775879" sim_time_ns="65700.0" ratio_time="1241236.944448198" />
+  </testsuite>
+</testsuites>
