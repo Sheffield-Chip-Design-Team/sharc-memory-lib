@@ -9,12 +9,13 @@ module block_ram_model #(
   parameter  DATA_WIDTH   = 32,
   parameter  INIT_VALUE   = 0,
   parameter  MEM_FILE     = "",
-  parameter  RAM_WORDS    = 1 << ADDR_WIDTH // Use full address space 
+  parameter  RAM_WORDS    = 1 << ADDR_WIDTH, // Use full address space 
+  parameter  READ_DELAY   = 0 // Optional read delay in clock cycles (not realistic but useful for testing)
 )(
   input  wire                     clk,
   input  wire  [ADDR_WIDTH-1:0]   addr,
   input  wire  [DATA_WIDTH-1:0]   wdata,
-  input  wire  [(DATA_WIDTH-1):0] wstrb, // TODO - enforce byte strobe
+  input  wire  [(DATA_WIDTH-1):0] bit_strb, 
   input  wire                     en,
   input  wire                     wr_en,
   output reg   [DATA_WIDTH-1:0]   rdata
@@ -39,20 +40,37 @@ module block_ram_model #(
 
   // TODO - Warn/error if you a read is attempted from outside of the valid index
 
-  // TODO add byte strobe to the RAM write acess
-
   // RAM write
-  always @(posedge clk ) begin
+  always @(posedge clk) begin
     if (en && wr_en) begin
-      mem[addr] <= wdata;
+      for (i = 0; i < DATA_WIDTH; i=i+1) begin
+        if (bit_strb[i]) begin
+          mem[addr][i] <= wdata[i];
+        end
+      end
     end
   end
 
   // RAM read
-  always @(posedge clk ) begin
-    if (en && ~wr_en) begin
-      rdata <= mem[addr];
+  generate
+    
+    if (READ_DELAY == 0) begin : zero_delay_read
+      always @(*) begin
+        if (en && ~wr_en) begin
+          rdata = mem[addr];
+        end else begin
+          rdata = {DATA_WIDTH{1'bx}}; // Output undefined when not enabled or during write
+        end
+      end
+    
+    end else begin : delayed_read
+      always @(posedge clk) begin
+        if (en && ~wr_en) begin
+          rdata <= mem[addr];
+        end
+      end
     end
-  end
+
+  endgenerate
 
 endmodule
