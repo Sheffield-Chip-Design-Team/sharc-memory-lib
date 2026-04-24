@@ -5,14 +5,19 @@ description: SHARC Single Port RAM Component
 filesets:
   model:
     files:
-      - model/block_ram_model.v     {file_type: verilogSource}
+      - model/block_ram_model.v: {file_type: verilogSource}
   tb:
-      - tb/block_ram_model_wtb.v    {file_type: verilogSource}
-      - tb/test_block_ram_model.py  {file_type: user}
+    files:
+      - tb/block_ram_model_wtb.v:   {file_type: verilogSource}
+      - tb/test_block_ram_model.py: {file_type: cocotbSource}
 
 targets:
   default: &default
-  default_tool: verilator
-  top_level: block_ram_model_wtb
     filesets:
       - model
+
+  tb:
+    default_tool: verilator
+    filesets:
+      - model
+      - tb
